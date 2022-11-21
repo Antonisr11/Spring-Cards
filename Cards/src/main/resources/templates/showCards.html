@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function getSelectedRadio() {
+            if (document.getElementById("filter_status_todo").checked) {
+                return "todo";
+            } else if (document.getElementById("filter_status_inprogress").checked) {
+                return "inprogress";
+            } else if (document.getElementById("filter_status_done").checked) {
+                return "done";
+            }
+            return "";
+        }
+    </script>
+
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        header {
+            opacity: 0.9;
+            background-color: #0F0000;
+            color: white;
+        }
+
+        body {
+            background-color: #191919;
+            height: 100%;
+        }
+
+        button {
+            background-color: #4C0000 !important;
+            color: white !important;
+            width: 50%;
+            border-color: red !important;
+        }
+
+        .card {
+            background-color: #4C0000;
+            color: white;
+            height: 250px;
+            overflow: auto;
+        }
+
+        .card-title {
+            text-align: center;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        input {
+            text-align: center;
+        }
+    </style>
+    <title>Showing Cards</title>
+</head>
+
+<body>
+
+<header>
+    <br>
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <h2 class="text-center" style="color: white;">Antonis</h2>
+        </div>
+        <div class="col-2">
+            <button class="btn" onclick="location.href='http://localhost:8080/'">
+                Log Out
+            </button>
+        </div>
+    </div>
+    <br>
+</header>
+
+<div style="background-color: rgba(15, 0, 0, 0.33);">
+    <div class="row">
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <div class="btn-group btn-group-toggle">
+                <label class="btn btn-light">
+                    <input id="filter_status_todo" name="filter1" type="radio"/>
+                    To Do
+                </label>
+                <label class="btn btn-light">
+                    <input id="filter_status_inprogress" name="filter1" type="radio"/>
+                    In Progress
+                </label>
+                <label class="btn btn-light">
+                    <input id="filter_status_done" name="filter1" type="radio"/>
+                    Done
+                </label>
+            </div>
+        </div>
+
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <input class="form-control" id="filter_name" placeholder="Card name" type="text"/>
+        </div>
+
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <input class="form-control" id="filter_color" maxlength="7" minlength="7" placeholder="#Color" type="text"/>
+        </div>
+
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <input class="form-control" id="filter_date" type="date"/>
+        </div>
+
+    </div>
+
+    <div class="row" style="padding-top: 5px; padding-bottom: 5px;">
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <button class="btn"
+                    onclick="location.href='http://localhost:8080/card/filter/status/'+getSelectedRadio()">
+                Filter by Status
+            </button>
+        </div>
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <button class="btn"
+                    onclick="location.href='http://localhost:8080/card/filter/name/'+document.getElementById('filter_name').value">
+                Filter by Name
+            </button>
+        </div>
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <button class="btn"
+                    onclick="location.href='http://localhost:8080/card/filter/color/'+document.getElementById('filter_color').value.substring(1)">
+                Filter by Color
+            </button>
+        </div>
+        <div class="col-3 d-flex justify-content-center align-items-center">
+            <button class="btn"
+                    onclick="location.href='http://localhost:8080/card/filter/date/'+document.getElementById('filter_date').value">
+                Filter by Date
+            </button>
+        </div>
+    </div>
+    <br>
+</div>
+
+<br>
+<dummy th:each="i: ${#numbers.sequence(0, cardsList.size(),4)}">
+    <div class="row" style="margin-bottom: 50px;">
+        <!--        1st-->
+        <div class="col-3" th:if="${i < cardsList.size()}">
+            <div class="card"
+                 th:attr="onclick=|location.href='http://localhost:8080/card/show/'+'${cardsList.get(i).getID()}';|"
+                 th:style="'background-color:' + ${cardsList.get(i).getColor()} + ';'"
+                 title="Click me to edit">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span th:text="${cardsList.get(i).getName()}"></span>
+                    </h5>
+                    <br>
+                    <p class="card-text">
+                        <span th:text="${cardsList.get(i).getDescription()}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3" th:if="${i == cardsList.size()}">
+            <div class="card" onclick="location.href='http://localhost:8080/card/insert/'"
+                 title="Click me to add">
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    CLICK TO ADD CARD
+                </div>
+            </div>
+        </div>
+
+        <!--        2nd-->
+        <div class="col-3"
+             th:attr="onclick=|location.href='http://localhost:8080/card/show/'+'${cardsList.get(i + 1).getID()}';|"
+             th:if="${i + 1 < cardsList.size()}">
+            <div class="card" th:style="'background-color:' + ${cardsList.get(i + 1).getColor()} + ';'"
+                 title="Click me to edit">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span th:text="${cardsList.get(i + 1).getName()}"></span>
+                    </h5>
+                    <br>
+                    <p class="card-text">
+                        <span th:text="${cardsList.get(i + 1).getDescription()}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3" th:if="${i + 1 == cardsList.size()}">
+            <div class="card" onclick="location.href='http://localhost:8080/card/insert/'"
+                 title="Click me to add">
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    CLICK TO ADD CARD
+                </div>
+            </div>
+        </div>
+
+        <!--        3rd-->
+        <div class="col-3"
+             th:attr="onclick=|location.href='http://localhost:8080/card/show/'+'${cardsList.get(i + 2).getID()}';|"
+             th:if="${i + 2 < cardsList.size()}">
+            <div class="card" th:style="'background-color:' + ${cardsList.get(i + 2).getColor()} + ';'"
+                 title="Click me to edit">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span th:text="${cardsList.get(i + 2).getName()}"></span>
+                    </h5>
+                    <br>
+                    <p class="card-text">
+                        <span th:text="${cardsList.get(i + 2).getDescription()}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3" th:if="${i + 2 == cardsList.size()}">
+            <div class="card" onclick="location.href='http://localhost:8080/card/insert/'"
+                 title="Click me to add">
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    CLICK TO ADD CARD
+                </div>
+            </div>
+        </div>
+
+        <!--        4rd-->
+        <div class="col-3"
+             th:attr="onclick=|location.href='http://localhost:8080/card/show/'+'${cardsList.get(i + 3).getID()}';|"
+             th:if="${i + 3 < cardsList.size()}">
+            <div class="card" th:style="'background-color:' + ${cardsList.get(i + 3).getColor()} + ';'"
+                 title="Click me to edit">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span th:text="${cardsList.get(i + 3).getName()}"></span>
+                    </h5>
+                    <br>
+                    <p class="card-text">
+                        <span th:text="${cardsList.get(i + 3).getDescription()}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3" th:if="${i + 3 == cardsList.size()}">
+            <div class="card" onclick="location.href='http://localhost:8080/card/insert/'"
+                 title="Click me to add">
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    CLICK TO ADD CARD
+                </div>
+            </div>
+        </div>
+
+    </div>
+</dummy>
+
+<br>
+
+</body>
+
+</html>

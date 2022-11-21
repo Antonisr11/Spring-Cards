@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            background-color: #191919;
+        }
+
+        * {
+            color: white;
+        }
+
+        th {
+            color: gold;
+            width: 50%;
+        }
+
+        td {
+            text-align: center;
+            width: 50%;
+        }
+
+        button {
+            color: white !important;
+            background-color: black !important;
+        }
+
+        header {
+            padding-bottom: 10px;
+        }
+
+        select {
+            text-align: center;
+            background-color: #191919 !important;
+            color: white !important;
+        }
+
+    </style>
+    <title>Showing One Card</title>
+</head>
+<body>
+<header th:style="'background-color:' + ${card.getColor()} + ';'">
+    <br>
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <h2 class="text-center" style="color: white;">Antonis</h2>
+        </div>
+        <div class="col-2">
+            <button class="btn border border-danger" onclick="location.href='http://localhost:8080/'">
+                Log Out
+            </button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            <button class="btn border border-danger" onclick="location.href='http://localhost:8080/card/showCards'"
+                    type="button">Return
+            </button>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            <form action="http://localhost:8080/card/commitDelete/" method="POST">
+                <input name="ID" th:value="${card.getID()}" type="hidden">
+                <button class="btn border border-danger" type="submit">Delete Card</button>
+            </form>
+        </div>
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            <button class="btn border border-danger"
+                    th:attr="onclick=|window.location.replace('http://localhost:8080/card/update/'+'${card.getID()}');|"
+                    type="button">
+                Update Card
+            </button>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            <button class="btn border border-danger" onClick="window.location.href=window.location.href" type="button">
+                Refresh
+            </button>
+        </div>
+    </div>
+</header>
+<br><br><br>
+<div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center">
+        <h3>Card Info</h3>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>ID</th>
+                <td><span th:text="${card.getID()}"/></td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td><span th:text="${card.getName()}"/></td>
+            </tr>
+            <tr>
+                <th>Color</th>
+                <td><span th:text="${card.getColor()}"/></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td><select class="form-select border-0" name="status" disabled>
+                    <option th:selected="${card.getStatus()==0}">To Do</option>
+                    <option th:selected="${card.getStatus()==1}">In Progress</option>
+                    <option th:selected="${card.getStatus()==2}">Done</option>
+                </select></td>
+            </tr>
+            <tr>
+                <th>Creation Date</th>
+                <td><span th:text="${card.getCreationDate()}"/></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td><span th:text="${card.getDescription()}"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
